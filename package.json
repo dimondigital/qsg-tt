@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@pixi/spritesheet": "^7.1.0",
+    "gsap": "^3.11.4",
     "pixi-filters": "^5.1.1",
     "pixi.js": "^7.1.0"
   }

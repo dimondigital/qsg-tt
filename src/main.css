@@ -6,8 +6,10 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #251e6a;
+    cursor: url('assets/cursor-normal.cur'), pointer; 
 }
 
 canvas {
     display: flex;
+    
 }
