@@ -1,19 +1,23 @@
 const path = require('path');
-const htmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: {
-        bundle: path.resolve(__dirname, 'src/index.js'),
-    },
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[contenthash].js',
-        clean: true,
-        assetModuleFilename: '[name][ext]'
-    },
+    // entry: {bundle: path.resolve(__dirname, 'src/index.js'),},
+    entry: './src/index.ts',
     module: {
         rules: [
+            {
+                test: /\.json$/,
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -25,10 +29,32 @@ module.exports = {
                 }
             },
             {
-                test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                type: 'asset/resource'
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.(gif|png|jpe?g)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'assets/images/'
+                          }
+                    },
+                ],
             }
         ]
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].[contenthash].js',
+        clean: true,
+        assetModuleFilename: '[name][ext]'
     },
     devtool: 'source-map',
     devServer: {
@@ -41,10 +67,22 @@ module.exports = {
         compress: true,
         historyApiFallback: true
     },
+
     plugins: [
-        new htmlWebpackPlugin({
-            title: 'QS Games task - Dmytro Nikolaev',
-            filename: 'index.html'
-        })
-    ]
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+          title: 'Pixi / Typescript seed',
+        }),
+        new CopyPlugin({
+          patterns: [{
+            from: './src/assets',
+            to: './assets',
+          }],
+        }),
+        new webpack.ProgressPlugin(),
+      ],
+
+    experiments: {
+        topLevelAwait: true
+    }
 }
