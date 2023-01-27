@@ -1,5 +1,10 @@
-import { Container, Text } from "pixi.js";
+import { AnimatedSprite, ColorMatrixFilter, Container, Text } from "pixi.js";
 import { AScreen } from "./a-screen";
+import * as PIXI from 'pixi.js';
+import sheetData from "../assets/run-up.json";
+import gsap from "gsap";
+import { Teleport } from "../actors/teleport";
+import { Direction, NPCGenerator } from "../actors/npc-generator";
 
 export class GameScreen extends AScreen {
 
@@ -15,9 +20,22 @@ export class GameScreen extends AScreen {
         })
         this.view.addChild(header);
 
-        setTimeout(() => {
-            super.initNextScreen();
-        }, 5000)
+        // init scene actors
+        const tlprt = new Teleport(mainContainer);
+        const unitGen = new NPCGenerator(mainContainer, Direction.NORTH);
+
+        
+
+        
+
+        
+
+        // this._view.addChild(tlprt);
+
+
+        // setTimeout(() => {
+        //     super.initNextScreen();
+        // }, 5000)
     }
 
 }

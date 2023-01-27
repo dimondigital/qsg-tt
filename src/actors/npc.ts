@@ -9,8 +9,10 @@ export class NPC {
 
     private _view: Container;
 
-    constructor() {
+    constructor(mainContainer: Container, x: number, y: number) {
         this._view = new Container();
+        this._view.x = x;
+        this._view.y = y;
        
         const sheet = PIXI.Texture.from('assets/adt_minotaur_shaman.png');
         const w = 140;
@@ -122,9 +124,10 @@ export class NPC {
         }
 
         this._view.addChild(npcMoveUp);
-        this._view.addChild(npcMoveDown);
-        this._view.addChild(npcMoveLeft);
-        this._view.addChild(npcMoveRight);
+        // this._view.addChild(npcMoveDown);
+        // this._view.addChild(npcMoveLeft);
+        // this._view.addChild(npcMoveRight);
+        mainContainer.addChild(this._view);
 
     }
 

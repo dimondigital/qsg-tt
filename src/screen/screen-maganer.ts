@@ -38,9 +38,22 @@ export class ScreenManager {
         // global pixelate filter
         const pixelFilter = new PixelateFilter(2);
         this.mainContainer = new Container();
-        this.mainContainer.filters = [pixelFilter];
+        // this.mainContainer.filters = [pixelFilter];
 
         this.app.stage.addChild(this.mainContainer);
+
+        this.app.ticker.add(this.gameLoop);
+    }
+
+    
+
+    gameLoop(){
+        requestAnimationFrame(this.gameLoop);
+        renderer.render(stage);
+        // for(let ch of this.mainContainer.children) {
+        //     ch.render(this.app.stage);
+        // }
+        
     }
 
 }

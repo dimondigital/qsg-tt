@@ -2,7 +2,7 @@ import "../src/main.css";
 import { PixelateFilter } from 'pixi-filters';
 import * as PIXI from 'pixi.js';
 import { Application, Assets, Container, ICanvas, Sprite } from 'pixi.js';
-import { NPC } from "./npc/npc";
+import { NPC } from "./actors/npc";
 import '@pixi/spritesheet';
 import { ScreenManager } from "./screen/screen-maganer";
 
