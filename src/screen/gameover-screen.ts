@@ -1,17 +1,14 @@
 import EventEmitter from "eventemitter3";
-import { Container, EventBoundary, FederatedEvent, FederatedPointerEvent, Text, TextStyle } from "pixi.js";
+import { Container, Text } from "pixi.js";
 import { AScreen } from "./a-screen";
 
-export class MenuScreen extends AScreen {
-    _mainContainer:Container;
-    _cb: Function;
+export class GameoverScreen extends AScreen {
+    
     constructor(mainContainer: Container, cb: Function) {
         super(mainContainer, cb);
-        this._cb = cb;
-        this._mainContainer = mainContainer;
 
         // header
-        const header = new Text('Menu Screen', {
+        const header = new Text('Gameover Screen', {
             fontFamily: 'Georgia',
             fontSize: 15,
             fill: 0xffffff,
@@ -20,7 +17,7 @@ export class MenuScreen extends AScreen {
         this.view.addChild(header);
 
         // start game button
-        let button = new Text('start game', {
+        let button = new Text('start new game', {
             fill: 0xffffff,
             fontFamily: 'Georgia',
             fontSize: 15,
@@ -36,4 +33,5 @@ export class MenuScreen extends AScreen {
         EE.once('click',this.initNextScreen, context);
         button.on('click', this.initNextScreen, context);
     }
+
 }
