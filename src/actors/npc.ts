@@ -42,75 +42,38 @@ export class NPC {
 
         let npcSheet: any = {};
         // const numFrames = 8;
+
+        npcSheet[direction] = this.setTexture(direction);
+        this.animS = new AnimatedSprite(npcSheet[direction]);
             
         switch(direction) {
-            case Direction.NW : 
-                npcSheet[Direction.NW] = this.setTexture(Direction.NW);
-                this.animS = new AnimatedSprite(npcSheet[Direction.NW]);
-                this.animS.anchor.set(scaleX, scaleY);
-                this._view.scale.set(scaleX, scaleY);
-                this.animS.loop = true;
-                this.animS.animationSpeed = .25;
-
-                // hit rect
-                this._hitRect = new PIXI.Graphics();
-                this._hitRect.beginFill(0x00ffff, 0.3);
-                this._hitRect.drawRect(-25, -15, 50, 70);
-                this._hitRect.endFill();
-                this._view.addChild(this._hitRect);
-               
-                this.animS.hitArea = new PIXI.Rectangle(-25, -15, 50, 70);
-                this.animS.play();
-                this.animS.interactive = true;
-
-                this._view.addChild(this.animS)
-                this._mc.addChild(this._view);
-            break;
-            case Direction.N :  
-                npcSheet[Direction.N] = this.setTexture(Direction.N);
-                this.animS = new AnimatedSprite(npcSheet[Direction.N]);
-                this.animS.anchor.set(scaleX, scaleY);
-                this._view.scale.set(scaleX, scaleY);
-                this.animS.loop = true;
-                this.animS.animationSpeed = .25;
-
-                // hit rect
-                this._hitRect = new PIXI.Graphics();
-                this._hitRect.beginFill(0x00ffff, 0.3);
-                this._hitRect.drawRect(-25, -15, 50, 70);
-                this._hitRect.endFill();
-                this._view.addChild(this._hitRect);
-
-                this.animS.hitArea = new PIXI.Rectangle(-25, -15, 50, 70);
-                this.animS.play();
-                this.animS.interactive = true;
-
-                this._view.addChild(this.animS)
-                this._mc.addChild(this._view);
-            break;
-            case Direction.NE :
-                npcSheet[Direction.NE] = this.setTexture(Direction.NE);
-                this.animS = new AnimatedSprite(npcSheet[Direction.NE]);
-                this.animS.anchor.set(scaleX, scaleY);
-                this._view.scale.set(-scaleX, scaleY);
-                this.animS.loop = true;
-                this.animS.animationSpeed = .25;
-
-                // hit rect
-                this._hitRect = new PIXI.Graphics();
-                this._hitRect.beginFill(0x00ffff, 0.3);
-                this._hitRect.drawRect(-25, -15, 50, 70);
-                this._hitRect.endFill();
-                this._view.addChild(this._hitRect);
-
-                this.animS.hitArea = new PIXI.Rectangle(-25, -15, 50, 70);
-                this.animS.play();
-                this.animS.interactive = true;
-
-                this._view.addChild(this.animS)
-                this._mc.addChild(this._view);
-            break;
+            case Direction.NW : this._view.scale.set(scaleX, scaleY); break;
+            case Direction.N :  this._view.scale.set(scaleX, scaleY); break;
+            case Direction.NE : this._view.scale.set(-scaleX, scaleY); break;
+            case Direction.E :  this._view.scale.set(-scaleX, scaleY); break;
+            case Direction.SE : this._view.scale.set(-scaleX, scaleY); break;
+            case Direction.S :  this._view.scale.set(-scaleX, scaleY); break;
+            case Direction.SW : this._view.scale.set(scaleX, scaleY); break;
+            case Direction.W :  this._view.scale.set(scaleX, scaleY); break;
         }
+
+        this.animS.anchor.set(scaleX, scaleY);
+        this.animS.loop = true;
+        this.animS.animationSpeed = .25;
+
+        // hit rect
+        this._hitRect = new PIXI.Graphics();
+        this._hitRect.beginFill(0x00ffff, 0.3);
+        this._hitRect.drawRect(-25, -15, 50, 70);
+        this._hitRect.endFill();
+        this._view.addChildAt(this._hitRect, 0);
+
+        this.animS.hitArea = new PIXI.Rectangle(-25, -15, 50, 70);
+
+        this.animS.play();
+        this.animS.interactive = true;
+        this._view.addChild(this.animS)
+        this._mc.addChild(this._view);
         
         const src = fromEvent(this.animS, 'click');
         this._clickSub = src.subscribe(e => {
@@ -279,11 +242,56 @@ export class NPC {
                 new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 7, h * 3, w, h)),
                 new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 8, h * 3, w, h))
             ];
-            case Direction.E : ;
-            case Direction.SE : ;
-            case Direction.S : ;
-            case Direction.SW : ;
-            case Direction.W : ;
+            case Direction.E : return [
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 1, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 2, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 3, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 4, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 5, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 6, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 7, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 8, h * 2, w, h))
+            ];
+            case Direction.SE : return [
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 1, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 2, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 3, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 4, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 5, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 6, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 7, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 8, h * 1, w, h))
+            ];
+            case Direction.S : return [
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 1, 0, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 2, 0, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 3, 0, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 4, 0, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 5, 0, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 6, 0, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 7, 0, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 8, 0, w, h))
+            ];
+            case Direction.SW : return [
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 1, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 2, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 3, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 4, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 5, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 6, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 7, h * 1, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 8, h * 1, w, h))
+            ];
+            case Direction.W : return [
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 1, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 2, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 3, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 4, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 5, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 6, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 7, h * 2, w, h)),
+                new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(w * 8, h * 2, w, h))
+            ];
         }
     }
 

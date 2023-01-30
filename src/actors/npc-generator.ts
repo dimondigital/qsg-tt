@@ -38,24 +38,16 @@ export class NPCGenerator {
         debug.drawRect(0, 0, rect.width, rect.height);
         debug.endFill();
         this._view.addChild(debug);
-        
-
-        switch(direction) {
-            // case Direction.NORTH: 
-        }
-
         this._mc.addChild(this._view);
 
         this.init(time);
     }
     
     init(time: number) {
-       
+
         setInterval(() => {
-            // console.log(`xxx: ${this._view.x}`);
-            // console.log(`yyy: ${this._view.y}`);
-            this.npss.push(new NPC(this._mc, +this._view.x, +this._view.y, this._direction, Date.now()));
-        }, time)
+            this.npss.push(new NPC(this._mc, +this._view.x, +this._view.y, this._direction, Date.now()+Math.random()*999));
+        }, Math.round(Math.random() * (time - 1000)) + 1000);
 
         this.play();
 
@@ -79,13 +71,12 @@ export class NPCGenerator {
                     case Direction.NW : npc.view.y += 1, npc.view.x += 1; break;
                     case Direction.N : npc.view.y += 1; break;
                     case Direction.NE : npc.view.y += 1, npc.view.x -= 1; break;
-                    case Direction.E : npc.view.x -= .266;
-                    case Direction.SE : npc.view.y -= .266, npc.view.x -= .266;
-                    case Direction.S : npc.view.y -= .266;
-                    case Direction.SW : npc.view.y -= .266, npc.view.x += .266;
-                    case Direction.W : npc.view.x += .266;
+                    case Direction.E : npc.view.x -= 1; break;
+                    case Direction.SE : npc.view.y -= 1, npc.view.x -= 1; break;
+                    case Direction.S : npc.view.y -= 1; break;
+                    case Direction.SW : npc.view.y -= 1, npc.view.x += 1; break;
+                    case Direction.W : npc.view.x += 1; break;
                 }
-                
             })
             
         });

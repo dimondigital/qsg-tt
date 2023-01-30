@@ -37,8 +37,8 @@ export class GameScreen extends AScreen {
         // unit generators
         const json: any[] = Object.values(UGConfig);
         console.log(json);
-        // for(let i = 0; i < json.length; i++) {
-        for(let i = 0; i < 3; i++) {
+        for(let i = 0; i < json.length; i++) {
+        // for(let i = 0; i < 5; i++) {
             // console.log(json[i].x);
             new NPCGenerator(mainContainer, i, 3000, json[i].x, json[i].y);
         }
