@@ -40,6 +40,7 @@
     "eventemitter3": "^5.0.0",
     "gsap": "^3.11.4",
     "pixi-filters": "^5.1.1",
-    "pixi.js": "^7.1.0"
+    "pixi.js": "^7.1.0",
+    "rxjs": "^7.8.0"
   }
 }

@@ -8,8 +8,19 @@ import { MenuScreen } from './menu-screen';
 
 export class ScreenManager {
 
-    private app: PIXI.Application;
+    public static app: PIXI.Application;
     private mainContainer: Container;
+
+    // private renderer = new PIXI.autoDetectRenderer(
+    //     600,
+    //     window.innerHeight,
+    //     {
+    //         "antialias": true,
+    //         "autoResize": true,
+    //         "transparent": true,
+    //         "resolution": 2
+    //     }
+    // );
 
     initGameScreen = (() => {
         const gameScreen = new GameScreen(this.mainContainer, this.initGameoverScreen);
@@ -30,30 +41,20 @@ export class ScreenManager {
     }
 
     initMain() {
-        this.app = new PIXI.Application({
+        ScreenManager.app = new PIXI.Application({
             view: document.getElementById('canvas') as HTMLCanvasElement
         });
-        document.body.appendChild(this.app.view as HTMLCanvasElement);
+        document.body.appendChild(ScreenManager.app.view as HTMLCanvasElement);
 
         // global pixelate filter
         const pixelFilter = new PixelateFilter(2);
         this.mainContainer = new Container();
         // this.mainContainer.filters = [pixelFilter];
 
-        this.app.stage.addChild(this.mainContainer);
+        ScreenManager.app.stage.addChild(this.mainContainer);
 
-        this.app.ticker.add(this.gameLoop);
+        // ScreenManager.app.ticker.add(this.gameLoop);
     }
-
     
-
-    gameLoop(){
-        requestAnimationFrame(this.gameLoop);
-        renderer.render(stage);
-        // for(let ch of this.mainContainer.children) {
-        //     ch.render(this.app.stage);
-        // }
-        
-    }
 
 }

@@ -14,7 +14,7 @@ export class Teleport {
     }
 
     init() {
-        const sheet = PIXI.Texture.from('assets/teleport_128.png'), 
+        const sheet = PIXI.Texture.from('assets/teleport_1282.png'), 
         w = 128, h = 64, numFrames = 4;
 
         let teleportSheet: any = {};
