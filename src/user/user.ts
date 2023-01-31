@@ -9,6 +9,6 @@ export class User {
     static pointsAdd() {
         // console.log('add')
         User.points += 10;
-        EventManager.eventStream$.next({e: AppEvent.USER_POINTS_SHOW, props: this});
+        EventManager.eventStream$.next({e: AppEvent.UI_POINTS_SHOW, props: this});
     }
 }

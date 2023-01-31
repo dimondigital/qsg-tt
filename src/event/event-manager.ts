@@ -12,8 +12,8 @@ export class EventManager {
         EventManager.eventStream$
         .subscribe(({e, props}) => {
             switch(e) {
-                case AppEvent.NPC_HIT:
-                    if (props instanceof NPC) VisualFx.whiteFlash(props.animS);
+                case AppEvent.NPC_DEATH:
+                    // if (props instanceof NPC) VisualFx.whiteFlash(props.animS);
                 break;
                 case AppEvent.USER_POINTS_ADD:
                     User.pointsAdd();

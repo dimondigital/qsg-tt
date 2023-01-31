@@ -9,6 +9,7 @@ import { EventManager } from "../event/event-manager";
 import { AppEvent } from "../event/app-event";
 import { User } from "../user/user";
 import { ScreenManager } from "./screen-maganer";
+import { GameConfig } from "../game-config";
 
 
 export class GameScreen extends AScreen {
@@ -35,9 +36,10 @@ export class GameScreen extends AScreen {
             this._npcGenerators.push(new NPCGenerator(mainContainer, i, 10000, json[i].x, json[i].y));
         }
 
-        // ui
+        /* UI */
+        // points counter
         const userPointsCounter = new Text('POINTS: 0', {
-            fontFamily: 'Georgia',
+            fontFamily: 'Trebuchet MS',
             fontSize: 15,
             fill: 0xffffff,
             align: 'justify'
@@ -46,10 +48,23 @@ export class GameScreen extends AScreen {
         EventManager.eventStream$
             .subscribe(({e, props}) => {
                 switch(e) {
-                    case AppEvent.USER_POINTS_SHOW:
+                    case AppEvent.UI_POINTS_SHOW:
                         userPointsCounter.text = `POINTS: ${User.points}`
                     break;
                 }
+        });
+
+        // enemy counter
+        const enemiesCounter = new Text('ENEMIES: 0', {
+            fontFamily: 'Trebuchet MS',
+            fontSize: 15,
+            fill: 0xffffff,
+            align: 'right'
+        });
+        enemiesCounter.x = GameConfig.GAMESCREEN_WIDTH - enemiesCounter.width - 30;
+        this.view.addChild(enemiesCounter);
+        ScreenManager.app.ticker.add(() => {
+            enemiesCounter.text = `ENEMIES: ${this.countTotalAliveEnemies()}`;
         });
 
         // hitTest for teleport & each npc
@@ -62,6 +77,14 @@ export class GameScreen extends AScreen {
                 }
             }
         });
+    }
+
+    countTotalAliveEnemies(): number {
+        let counter = 0;
+        for(let npcg of this._npcGenerators) {
+            counter += npcg.npss.length;
+        }
+        return counter;
     }
 
     boxesIntersect(a:PIXI.Graphics, b:PIXI.Graphics): boolean

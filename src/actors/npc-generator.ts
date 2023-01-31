@@ -23,6 +23,7 @@ export class NPCGenerator {
     private _mc: Container;
     private _direction: Direction;
     private _graphics: PIXI.Graphics;
+    private _npcSpeedPower: number = 0.005;
     npss: NPC[] = [];
     
     constructor(mainContainer: Container, direction: Direction, time: number = 2000, x: number, y: number) {
@@ -47,8 +48,13 @@ export class NPCGenerator {
     
     init(time: number) {
 
+        // increase speed interval
         setInterval(() => {
-            this.npss.push(new NPC(this._mc, +this._view.x, +this._view.y, this._direction, Date.now()+Math.random()*999));
+            this._npcSpeedPower += this._npcSpeedPower;
+        }, 10000);
+
+        setInterval(() => {
+            this.npss.push(new NPC(this._mc, +this._view.x, +this._view.y, this._direction, Date.now()+Math.random()*999, this._npcSpeedPower));
         }, Math.round(Math.random() * (time - 3000)) + 3000);
 
         this.play();
@@ -79,16 +85,8 @@ export class NPCGenerator {
         let elapsed = 0.0;
         ScreenManager.app.ticker.add(() => {
             this.npss.forEach((npc: NPC) => {
-                switch(npc.direction) {
-                    case Direction.NW : npc.view.y += 0.5, npc.view.x += 0.5; break;
-                    case Direction.N : npc.view.y += 0.5; break;
-                    case Direction.NE : npc.view.y += 0.5, npc.view.x -= 0.5; break;
-                    case Direction.E : npc.view.x -= 0.5; break;
-                    case Direction.SE : npc.view.y -= 0.5, npc.view.x -= 0.5; break;
-                    case Direction.S : npc.view.y -= 0.5; break;
-                    case Direction.SW : npc.view.y -= 0.5, npc.view.x += 0.5; break;
-                    case Direction.W : npc.view.x += 0.5; break;
-                }
+                const nsp = this._npcSpeedPower;
+                npc.walk();
             });
 
             if(Debug.isDebug) {

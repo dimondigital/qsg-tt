@@ -28,8 +28,9 @@ export class NPC {
     public animS: AnimatedSprite;
     private _id: number;
     hitRect: PIXI.Graphics;
+    private _npcSpeedPower: number;
 
-    constructor(mainContainer: Container, x: number, y: number, direction: Direction, id: number) {
+    constructor(mainContainer: Container, x: number, y: number, direction: Direction, id: number, npcSpeedPower: number) {
         this._view = new Container();
         // console.log(`id: ${id}, y: ${y}`);
         this._view.x = x;
@@ -37,6 +38,7 @@ export class NPC {
         this._direction = direction;
         this._id = id;
         this._mc = mainContainer;
+        this._npcSpeedPower = npcSpeedPower;
 
         let scaleX = 0.5;
         let scaleY = 0.5; 
@@ -187,8 +189,6 @@ export class NPC {
     }
 
     destroy() {
-        
-
         this._view.removeChild(this.hitRect);
         this._view.removeChild(this.animS);
         this._mc.removeChild(this._view);
@@ -209,7 +209,9 @@ export class NPC {
         animDeath.loop = false;
         animDeath.animationSpeed = .25;
         animDeath.play();
+
         this._mc.addChild(animDeath);
+        VisualFx.whiteFlash(animDeath);
 
         setTimeout(() => {
             this._mc.removeChild(animDeath);
@@ -238,6 +240,20 @@ export class NPC {
         setTimeout(() => {
             this._mc.removeChild(animTeleport);
         }, 1000)
+    }
+
+    walk() {
+        const nsp = this._npcSpeedPower;
+        switch(this._direction) {
+            case Direction.NW : this.view.y += 0.5 + nsp, this.view.x += 0.5 + nsp; break;
+            case Direction.N : this.view.y += 0.5 + nsp; break;
+            case Direction.NE : this.view.y += 0.5 + nsp, this.view.x -= 0.5 + nsp; break;
+            case Direction.E : this.view.x -= 0.5 + nsp; break;
+            case Direction.SE : this.view.y -= 0.5 + nsp, this.view.x -= 0.5 + nsp; break;
+            case Direction.S : this.view.y -= 0.5 + nsp; break;
+            case Direction.SW : this.view.y -= 0.5 + nsp, this.view.x += 0.5 + nsp; break;
+            case Direction.W : this.view.x += 0.5 + nsp; break;
+        }
     }
 
     get view(): Container { return this._view; }
