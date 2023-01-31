@@ -35,14 +35,9 @@ export class ScreenManager {
         });
         document.body.appendChild(ScreenManager.app.view as HTMLCanvasElement);
 
-        // global pixelate filter
-        const pixelFilter = new PixelateFilter(2);
         this.mainContainer = new Container();
-        // this.mainContainer.filters = [pixelFilter];
 
         ScreenManager.app.stage.addChild(this.mainContainer);
-
-        // ScreenManager.app.ticker.add(this.gameLoop);
     }
     
 

@@ -4,12 +4,13 @@ import * as PIXI from 'pixi.js';
 import UGConfig from "../assets/unit-generator.config.json";
 import gsap from "gsap";
 import { Teleport } from "../actors/teleport";
-import { Direction, NPCGenerator } from "../actors/npc-generator";
+import { NPCGenerator } from "../actors/npc-generator";
 import { EventManager } from "../event/event-manager";
 import { AppEvent } from "../event/app-event";
 import { User } from "../user/user";
 import { ScreenManager } from "./screen-maganer";
 import { GameConfig } from "../game-config";
+import { Utils } from "../utils/utils";
 
 
 export class GameScreen extends AScreen {
@@ -71,7 +72,7 @@ export class GameScreen extends AScreen {
         ScreenManager.app.ticker.add(() => {
             for(let npcG of this._npcGenerators) {
                 for(let npc of npcG.npss) {
-                    if (this.boxesIntersect(npc.hitRect, tlprt.hitRect)) {
+                    if (Utils.boxesIntersect(npc.hitRect, tlprt.hitRect)) {
                         EventManager.eventStream$.next({e: AppEvent.NPC_TELEPORT, props: {tlprt, npc}})
                     }
                 }
@@ -85,16 +86,6 @@ export class GameScreen extends AScreen {
             counter += npcg.npss.length;
         }
         return counter;
-    }
-
-    boxesIntersect(a:PIXI.Graphics, b:PIXI.Graphics): boolean
-    {
-        const aPos = a.getGlobalPosition();
-        const aBounds = a.getBounds();
-        const bPos = b.getGlobalPosition();
-        const bBounds = b.getBounds();
-
-        return a.getBounds().intersects(b.getBounds());
     }
 
 }

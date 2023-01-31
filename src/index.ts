@@ -7,7 +7,7 @@ import '@pixi/spritesheet';
 import { ScreenManager } from "./screen/screen-maganer";
 import { EventManager } from "./event/event-manager";
 import { User } from "./user/user";
-import { Debug } from "./debug/debug";
+import { Debugger } from "./debug/debug";
 
 
 
@@ -15,7 +15,7 @@ export class App {
   eventManager = new EventManager();
   screenManager = new ScreenManager();
   user = new User();
-  debug = new Debug();
+  debug = new Debugger();
 }
 
 new App();

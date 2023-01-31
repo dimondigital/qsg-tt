@@ -1,6 +1,6 @@
 import { fromEvent } from 'rxjs';
 
-export class Debug {
+export class Debugger {
 
     public static isDebug: boolean;
 
@@ -8,8 +8,8 @@ export class Debug {
         const src = fromEvent(document, 'keydown');
         const sub = src.subscribe((e: KeyboardEvent) => {
             if (e.key === 'd') {
-                Debug.isDebug = !Debug.isDebug;
-                console.log(`DEBUG IS: ${Debug.isDebug}`);
+                Debugger.isDebug = !Debugger.isDebug;
+                console.log(`DEBUG IS: ${Debugger.isDebug}`);
             }
         });
     }

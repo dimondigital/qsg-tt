@@ -1,6 +1,6 @@
 {
   "name": "qsg-tt",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "game",
   "main": "src/index.ts",
   "scripts": {
