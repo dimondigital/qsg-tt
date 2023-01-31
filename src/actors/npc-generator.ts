@@ -1,6 +1,6 @@
 import { Container, DisplayObject, Rectangle } from "pixi.js";
 import { GameConfig } from "../game-config";
-import { ScreenManager } from "../screen/screen-maganer";
+import { GameController } from "../screen/screen-maganer";
 import { NPC } from "./npc";
 import * as PIXI from 'pixi.js';
 import { EventManager } from "../event/event-manager";
@@ -20,6 +20,8 @@ export class NPCGenerator {
     private _direction: NPCDirection;
     private _graphics: PIXI.Graphics;
     private _npcSpeedPower: number = 0.005;
+    private _increaseSpeedInterval: NodeJS.Timer;
+    private _generateNPCInterval: NodeJS.Timer;
     npss: INPC[] = [];
     
     constructor(
@@ -48,14 +50,14 @@ export class NPCGenerator {
     }
     
     init(time: number) {
-
+        
         // increase speed interval
-        setInterval(() => {
+        this._increaseSpeedInterval = setInterval(() => {
             this._npcSpeedPower += this._npcSpeedPower;
         }, 10000);
 
         // generate npcs
-        setInterval(() => {
+        this._generateNPCInterval = setInterval(() => {
             this.npss.push(new Minotaur(
                 this._mc,
                 +this._view.x,
@@ -80,7 +82,9 @@ export class NPCGenerator {
                         }
                     break;
                     case AppEvent.NPC_TELEPORT:
-                        if (props.npc instanceof Minotaur && this.npss.includes(props.npc)) {
+                        if (props.npc instanceof MinotaurExtra && this.npss.includes(props.npc)) {
+                            EventManager.eventStream$.next({e: AppEvent.GAME_OVER, props: this});
+                        } else if (props.npc instanceof Minotaur && this.npss.includes(props.npc)) {
                             props.npc.playTeleporting();
                             this.npss = this.npss.filter(item => item.id !== props.npc.id);
                             props.npc.destroy();
@@ -105,7 +109,7 @@ export class NPCGenerator {
 
     play() {
         let elapsed = 0.0;
-        ScreenManager.app.ticker.add(() => {
+        GameController.app.ticker.add(() => {
             this.npss.forEach((npc: INPC) => {
                 const nsp = this._npcSpeedPower;
                 npc.walk();
@@ -118,6 +122,12 @@ export class NPCGenerator {
             }
             
         });
+    }
+
+    destroy(): void {
+        this.npss = [];
+        clearInterval(this._generateNPCInterval);
+        clearInterval(this._increaseSpeedInterval);
     }
 
 }

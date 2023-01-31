@@ -6,7 +6,7 @@ import { fromEvent } from 'rxjs';
 import { EventManager } from "../event/event-manager";
 import { User } from "../user/user";
 import { AppEvent } from "../event/app-event";
-import { ScreenManager } from "../screen/screen-maganer";
+import { GameController } from "../screen/screen-maganer";
 import { Debugger as Debugger } from "../debug/debug";
 import { INPC } from "./inpc";
 
@@ -77,13 +77,16 @@ export class Minotaur extends NPC implements INPC {
             }
         })
 
-        ScreenManager.app.ticker.add(() => {
-            if(Debugger.isDebug) {
-                this.hitRect.alpha = .3;
-            } else {
-                this.hitRect.alpha = 0;
-            }
-        });
+        if (!this.destroyed) {
+        
+            GameController.app.ticker.add(() => {
+                if(Debugger.isDebug) {
+                    this.hitRect.alpha = .3;
+                } else {
+                    this.hitRect.alpha = 0;
+                }
+            });
+        }
     };
 
     public override walk() {
@@ -112,7 +115,7 @@ export class Minotaur extends NPC implements INPC {
         animDeath.anchor.set(0.5, 0.5);
         animDeath.scale.set(0.5, 0.5);
         animDeath.loop = false;
-        animDeath.animationSpeed = .25;
+        animDeath.animationSpeed = (.25 + this._npcSpeedPower);
         animDeath.play();
 
         this._mc.addChild(animDeath);

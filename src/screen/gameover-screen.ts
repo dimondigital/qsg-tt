@@ -1,11 +1,27 @@
 import EventEmitter from "eventemitter3";
-import { Container, Text } from "pixi.js";
+import { Container, Graphics, Rectangle, Text } from "pixi.js";
+import { fromEvent } from "rxjs";
+import { AppEvent } from "../event/app-event";
+import { EventManager } from "../event/event-manager";
+import { GameConfig } from "../game-config";
 import { AScreen } from "./a-screen";
 
 export class GameoverScreen extends AScreen {
     
-    constructor(mainContainer: Container, cb: Function) {
-        super(mainContainer, cb);
+    constructor(mainContainer: Container) {
+        super(mainContainer);
+    }
+
+    public override init(): void {
+        
+        // bg
+        const bg = new Graphics();
+        bg.beginFill(0x000000, 1);
+        bg.drawRect(0, 0, GameConfig.GAMESCREEN_WIDTH, GameConfig.GAMESCREEN_HEIGHT);
+        bg.endFill();
+        // this._mc.removeChildren();
+        // this._mc.addChild(this.view);
+        this._mc.addChild(bg);
 
         // header
         const header = new Text('Gameover Screen', {
@@ -14,7 +30,7 @@ export class GameoverScreen extends AScreen {
             fill: 0xffffff,
             align: 'left'
         })
-        this.view.addChild(header);
+        this._mc.addChild(header);
 
         // start game button
         let button = new Text('start new game', {
@@ -25,13 +41,18 @@ export class GameoverScreen extends AScreen {
             
         })
         button.y = 50;
-        this.view.addChild(button);
+        this._mc.addChild(button);
         button.interactive = true;
 
-        var EE = new EventEmitter()
-        , context = this;
-        EE.once('click',this.initNextScreen, context);
-        button.on('click', this.initNextScreen, context);
+        const src = fromEvent(button, 'click');
+        this._clickSub = src.subscribe((e) => {
+            EventManager.eventStream$.next({e: AppEvent.GAME_INIT, props: this});
+        });
+    }
+
+    public override destroy(): void {
+        this._clickSub.unsubscribe();
+        super.destroy();
     }
 
 }

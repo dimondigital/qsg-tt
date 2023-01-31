@@ -13,7 +13,7 @@ export class Utils {
     }
 
     static generateRandomId(): number {
-        return Date.now()+Math.random()*999;
+        return Date.now()+Math.random() * 999;
     }
 
     static generateFlexibleTimeRange(fullTime: number, flexRange: number): number {

@@ -1,6 +1,6 @@
 import { AnimatedSprite, Container, Graphics, Rectangle } from "pixi.js";
 import * as PIXI from 'pixi.js';
-import { ScreenManager } from "../screen/screen-maganer";
+import { GameController } from "../screen/screen-maganer";
 import { Debugger } from "../debug/debug";
 
 export class Teleport {
@@ -62,7 +62,7 @@ export class Teleport {
         this._view.addChild(this.hitRect);
         this._mc.addChild(this._view);
 
-        ScreenManager.app.ticker.add(() => {
+        GameController.app.ticker.add(() => {
             if(Debugger.isDebug) {
                 this.hitRect.alpha = .3;
             } else {

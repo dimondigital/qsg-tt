@@ -1,24 +1,27 @@
 import { Container } from "pixi.js";
 import * as PIXI from 'pixi.js';
 import EventEmitter from 'eventemitter3';
+import { Subscription } from "rxjs";
 
 export class AScreen {
     _view: Container;
     _mc: Container;
-    _cb: Function;
+    protected _clickSub: Subscription;
+    protected destroyed: boolean;
 
-    constructor(mainContainer: Container, cb: Function) {
+    constructor(mainContainer: Container) {
         this._view = new Container();
         this._mc = mainContainer;
-        this._cb = cb;
-        mainContainer.addChild(this._view);
+        this._mc.addChild(this._view);
     }
 
-    initNextScreen() {
-        this._view.visible = false;
-        this._cb();
+    destroy(): void {
+        this._mc.removeChild(this._view);
+    }
+
+    init(): void {
+        
     }
 
     get view(): Container { return this._view; }
-    get cb(): Function { return this._cb; }
 }

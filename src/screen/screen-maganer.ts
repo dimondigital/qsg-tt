@@ -2,26 +2,26 @@ import EventEmitter from 'eventemitter3';
 import { PixelateFilter } from 'pixi-filters';
 import * as PIXI from 'pixi.js';
 import { AnimatedSprite, Container, EventSystem, Renderer, Texture } from 'pixi.js';
+import { AppEvent } from '../event/app-event';
+import { EventManager } from '../event/event-manager';
+import { User } from '../user/user';
+import { AScreen } from './a-screen';
 import { GameScreen } from './game-screen';
 import { GameoverScreen } from './gameover-screen';
 import { MenuScreen } from './menu-screen';
 
-export class ScreenManager {
+export enum ScreenName {
+    MENU = 0, 
+    GAME = 1,
+    GAME_OVER = 2
+}
+
+export class GameController {
 
     public static app: PIXI.Application;
     private mainContainer: Container;
-
-    initGameScreen = (() => {
-        const gameScreen = new GameScreen(this.mainContainer, this.initGameoverScreen);
-    }); 
-
-    initMenuScreen = (() => {
-        const menuScreen = new MenuScreen(this.mainContainer, this.initGameScreen);
-    });
-
-    initGameoverScreen = (() => {
-        const gameoverScreen = new GameoverScreen(this.mainContainer, this.initGameScreen);
-    });
+    private screens: AScreen[] = [];
+    private currentScreen: AScreen;
 
     // entry view point
     constructor() {
@@ -29,16 +29,55 @@ export class ScreenManager {
         this.initMenuScreen();
     }
 
+    initMenuScreen() {
+        this.screens[ScreenName.MENU].init();
+        this.currentScreen = this.screens[ScreenName.MENU];
+    };
+
+    initGameScreen() {
+        this.screens[ScreenName.GAME].init();
+        this.currentScreen = this.screens[ScreenName.GAME];
+    }; 
+
+    initGameoverScreen() {
+        this.screens[ScreenName.GAME_OVER].init();
+        this.currentScreen = this.screens[ScreenName.GAME_OVER];
+    };
+
     initMain() {
-        ScreenManager.app = new PIXI.Application({
+        GameController.app = new PIXI.Application({
             view: document.getElementById('canvas') as HTMLCanvasElement
         });
-        document.body.appendChild(ScreenManager.app.view as HTMLCanvasElement);
+        document.body.appendChild(GameController.app.view as HTMLCanvasElement);
 
         this.mainContainer = new Container();
+        this.screens[ScreenName.MENU] = new MenuScreen(this.mainContainer);
+        this.screens[ScreenName.GAME] = new GameScreen(this.mainContainer);
+        this.screens[ScreenName.GAME_OVER] = new GameoverScreen(this.mainContainer);
+        GameController.app.stage.addChild(this.mainContainer);
 
-        ScreenManager.app.stage.addChild(this.mainContainer);
+        EventManager.eventStream$
+            .subscribe(({e, props}) => {
+                switch(e) {
+                    case AppEvent.GAME_INIT:
+                        this.destroy();
+                        this.initGameScreen();
+                    break;
+                    case AppEvent.GAME_OVER:
+                        User.clearProgress();
+                        this.destroy();
+                        this.initGameoverScreen();
+                    break;
+                }
+        });
     }
     
+    destroy(): void {
+        this.currentScreen.destroy();
+        // for(let child of this.mainContainer.children) {
+        //     child.destroy();
+        // }
+        // const removed = this.mainContainer.removeChildren();
+    }
 
 }

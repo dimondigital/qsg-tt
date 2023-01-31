@@ -1,4 +1,4 @@
-import { AnimatedSprite, ColorMatrixFilter, Container, IHitArea, Rectangle, Sprite, Text, Texture } from "pixi.js";
+import { AnimatedSprite, ColorMatrixFilter, Container, IHitArea, Rectangle, Sprite, Text, Texture, Ticker } from "pixi.js";
 import { AScreen } from "./a-screen";
 import * as PIXI from 'pixi.js';
 import UGConfig from "../assets/unit-generator.config.json";
@@ -8,7 +8,7 @@ import { NPCGenerator } from "../actors/npc-generator";
 import { EventManager } from "../event/event-manager";
 import { AppEvent } from "../event/app-event";
 import { User } from "../user/user";
-import { ScreenManager } from "./screen-maganer";
+import { GameController } from "./screen-maganer";
 import { GameConfig } from "../game-config";
 import { Utils } from "../utils/utils";
 
@@ -16,25 +16,27 @@ import { Utils } from "../utils/utils";
 export class GameScreen extends AScreen {
 
     private _npcGenerators: NPCGenerator[] = [];
+    private _gameTicker: Ticker;
 
-    constructor(mainContainer: Container, cb: Function) {
-        super(mainContainer, cb);
+    constructor(mainContainer: Container) {
+        super(mainContainer);
+    }
+
+    public override init(): void {
 
         /* init scene actors */
 
         // background
         const bgSprite = new Sprite(Texture.from('assets/map.png'));
-        this._mc.addChildAt(bgSprite, 0);
+        this._mc.addChild(bgSprite);
 
         // teleport
-        const tlprt = new Teleport(mainContainer);
+        const tlprt = new Teleport(this._mc);
         
         // unit generators
         const json: any[] = Object.values(UGConfig);
-        console.log(json);
-        
         for(let i = 0; i < json.length; i++) {
-            this._npcGenerators.push(new NPCGenerator(mainContainer, i, 10000, json[i].x, json[i].y));
+            this._npcGenerators.push(new NPCGenerator(this._mc, i, 10000, json[i].x, json[i].y));
         }
 
         /* UI */
@@ -45,7 +47,8 @@ export class GameScreen extends AScreen {
             fill: 0xffffff,
             align: 'justify'
         });
-        this.view.addChild(userPointsCounter);
+        this._mc.addChild(userPointsCounter);
+
         EventManager.eventStream$
             .subscribe(({e, props}) => {
                 switch(e) {
@@ -54,9 +57,9 @@ export class GameScreen extends AScreen {
                     break;
                     case AppEvent.NPC_ADD_EXTRA:
                         const randomNPCGeneratorIdx: number = Math.floor(Math.random() * this._npcGenerators.length);
-                        console.log(`randomNPCGeneratorIdx: ${randomNPCGeneratorIdx}`);
                         this._npcGenerators[randomNPCGeneratorIdx].addExtraNPC();
                     break;
+
                 }
         });
 
@@ -68,21 +71,43 @@ export class GameScreen extends AScreen {
             align: 'right'
         });
         enemiesCounter.x = GameConfig.GAMESCREEN_WIDTH - enemiesCounter.width - 30;
-        this.view.addChild(enemiesCounter);
-        ScreenManager.app.ticker.add(() => {
-            enemiesCounter.text = `ENEMIES: ${this.countTotalAliveEnemies()}`;
-        });
+        this._mc.addChild(enemiesCounter);
 
-        // hitTest for teleport & each npc
-        ScreenManager.app.ticker.add(() => {
-            for(let npcG of this._npcGenerators) {
-                for(let npc of npcG.npss) {
-                    if (Utils.boxesIntersect(npc.hitRect, tlprt.hitRect)) {
-                        EventManager.eventStream$.next({e: AppEvent.NPC_TELEPORT, props: {tlprt, npc}})
+        if (!this.destroyed) {
+            this._gameTicker = GameController.app.ticker.add(() => {
+                
+
+                // hitTest for teleport & each npc
+                if (this._npcGenerators) {
+                    for(let npcG of this._npcGenerators) {
+                        for(let npc of npcG.npss) {
+                            if (Utils.boxesIntersect(npc.hitRect, tlprt.hitRect)) {
+                                EventManager.eventStream$.next({e: AppEvent.NPC_TELEPORT, props: {tlprt, npc}})
+                            }
+                        }
                     }
                 }
+
+                // update enemies counter
+                if(this._npcGenerators) enemiesCounter.text = `ENEMIES: ${this.countTotalAliveEnemies()}`;
+            });
+        }
+    }
+
+    public override destroy(): void {
+        this.destroyed = true;
+        for(let npcG of this._npcGenerators) {
+            for(let npc of npcG.npss) {
+                npc.destroyed = true;
+                npcG.npss = npcG.npss.filter(ii => ii.id === npc.id);
+                npc.destroy();
             }
-        });
+            npcG.destroy();
+        }
+        // this._npcGenerators = undefined;
+        // this._gameTicker.destroy();
+        this.destroyed = false;
+        super.destroy();
     }
 
     countTotalAliveEnemies(): number {

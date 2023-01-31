@@ -10,7 +10,7 @@ import { VisualFx } from "../visual-effects/visual-fx";
 import { User } from "../user/user";
 import { fromEvent, Subscription } from 'rxjs';
 import { Debugger } from "../debug/debug";
-import { ScreenManager } from "../screen/screen-maganer";
+import { GameController } from "../screen/screen-maganer";
 import { NPCDirection } from "./npc-direction";
 import { INPC } from "./inpc";
 
@@ -21,7 +21,7 @@ export class NPC implements INPC {
     protected _mc: Container;
     protected frameHeight: number;
     protected frameWidth: number;
-
+    
     protected _id: number;
     protected _direction: NPCDirection;
     protected _npcSpeedPower: number;
@@ -30,6 +30,7 @@ export class NPC implements INPC {
     protected _clickSub: Subscription;
     public hitRect: Graphics;
     public animS: AnimatedSprite;
+    public destroyed: boolean;
 
     constructor(
         mainContainer: Container, 
@@ -44,7 +45,7 @@ export class NPC implements INPC {
         this._view.y = y;
         this._direction = direction;
         this._id = id;
-        this._npcSpeedPower = npcSpeedPower;
+        this._npcSpeedPower = npcSpeedPower * 6;
 
     }
 
@@ -71,10 +72,10 @@ export class NPC implements INPC {
     }
 
     destroy(): void {
+        this._clickSub.unsubscribe();
         this._view.removeChild(this.hitRect);
         this._view.removeChild(this.animS);
         this._mc.removeChild(this._view);
-        this._clickSub.unsubscribe();
     };
 
     get view(): Container { return this._view; }

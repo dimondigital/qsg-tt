@@ -7,8 +7,12 @@ export class User {
     static points: number = 0;
 
     static pointsAdd() {
-        // console.log('add')
         User.points += 10;
         EventManager.eventStream$.next({e: AppEvent.UI_POINTS_SHOW, props: this});
     }
+
+    static clearProgress(): void {
+        User.points = 0;
+    }
+    
 }
