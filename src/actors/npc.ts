@@ -16,12 +16,13 @@ import { ScreenManager } from "../screen/screen-maganer";
 
 export class NPC {
 
-    sheet = PIXI.Texture.from('assets/adt_minotaur_shaman.png');
+    // sheet = PIXI.Texture.from('assets/adt_minotaur_shaman.png');
+    sheet = PIXI.Texture.from('assets/adt_minotaur_shaman+fx.png');
     frameWidth = 140;
     frameHeight = 140;
     private _view: Container;
     private _direction: Direction;
-    private _health: number = 11;
+    private _health: number = 1;
     private _mc: Container;
     private _clickSub: Subscription;
     public animS: AnimatedSprite;
@@ -79,7 +80,7 @@ export class NPC {
         
         const src = fromEvent(this.animS, 'click');
         this._clickSub = src.subscribe(e => {
-            console.log('clk')
+            // console.log('clk')
             this._health -= User.power;
             if (this._health > 0) {
                 EventManager.eventStream$.next({e: AppEvent.NPC_HIT, props: this});
@@ -213,6 +214,30 @@ export class NPC {
         setTimeout(() => {
             this._mc.removeChild(animDeath);
         }, 2000)
+    }
+
+    playTeleporting() {
+        const animTeleport = new AnimatedSprite([
+            new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(140 * 4, 140 * 5, 140, 140)),
+            new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(140 * 5, 140 * 5, 140, 140)),
+            new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(140 * 6, 140 * 5, 140, 140)),
+            new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(140 * 7, 140 * 5, 140, 140)),
+            new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(140 * 8, 140 * 5, 140, 140)),
+            new PIXI.Texture(this.sheet.baseTexture, new PIXI.Rectangle(140 * 8, 140 * 6, 140, 140)),
+        ]);
+
+        animTeleport.x = this._view.x;
+        animTeleport.y = this._view.y;
+        animTeleport.anchor.set(0.5, 0.5);
+        animTeleport.scale.set(0.5, 0.5);
+        animTeleport.loop = false;
+        animTeleport.animationSpeed = .25;
+        animTeleport.play();
+        this._mc.addChild(animTeleport);
+
+        setTimeout(() => {
+            this._mc.removeChild(animTeleport);
+        }, 1000)
     }
 
     get view(): Container { return this._view; }

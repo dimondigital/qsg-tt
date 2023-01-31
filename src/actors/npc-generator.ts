@@ -65,11 +65,9 @@ export class NPCGenerator {
                         }
                     break;
                     case AppEvent.NPC_TELEPORT:
-                        //@ts-ignore
                         if (props.npc instanceof NPC && this.npss.includes(props.npc)) {
-                            //@ts-ignore
+                            props.npc.playTeleporting();
                             this.npss = this.npss.filter(item => item.id !== props.npc.id);
-                            //@ts-ignore
                             props.npc.destroy();
                         }
                     break;
