@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import { PixelateFilter } from 'pixi-filters';
 import * as PIXI from 'pixi.js';
-import { Container, EventSystem, Renderer } from 'pixi.js';
+import { AnimatedSprite, Container, EventSystem, Renderer, Texture } from 'pixi.js';
 import { GameScreen } from './game-screen';
 import { GameoverScreen } from './gameover-screen';
 import { MenuScreen } from './menu-screen';
@@ -10,17 +10,6 @@ export class ScreenManager {
 
     public static app: PIXI.Application;
     private mainContainer: Container;
-
-    // private renderer = new PIXI.autoDetectRenderer(
-    //     600,
-    //     window.innerHeight,
-    //     {
-    //         "antialias": true,
-    //         "autoResize": true,
-    //         "transparent": true,
-    //         "resolution": 2
-    //     }
-    // );
 
     initGameScreen = (() => {
         const gameScreen = new GameScreen(this.mainContainer, this.initGameoverScreen);

@@ -1,14 +1,21 @@
-import { AnimatedSprite, Container } from "pixi.js";
+import { AnimatedSprite, Container, Graphics, Rectangle } from "pixi.js";
 import * as PIXI from 'pixi.js';
+import { ScreenManager } from "../screen/screen-maganer";
+import { Debug } from "../debug/debug";
 
 export class Teleport {
 
     _view: Container;
+    _mc: Container;
+    _animSprite: AnimatedSprite;
+    hitRect: Graphics;
+    hitArea: Container;
 
     constructor(mainContainer: Container) {
         this._view = new Container();
+        this._mc = mainContainer;
         
-        mainContainer.addChild(this._view);
+        
 
         this.init();
     }
@@ -27,20 +34,48 @@ export class Teleport {
             new PIXI.Texture(sheet.baseTexture, new PIXI.Rectangle(0, 0, w, h))
         ];
 
-        const tlprtStatic = new AnimatedSprite(teleportSheet['static']);
-        tlprtStatic.loop = false;
-        tlprtStatic.animationSpeed = .25;
-        tlprtStatic.gotoAndStop(0);
-        tlprtStatic.x = 800 / 2 - w / 2;
-        tlprtStatic.y = 600 / 2 - h / 2;
+        this._animSprite = new AnimatedSprite(teleportSheet['static']);
+        this._animSprite.loop = false;
+        this._animSprite.animationSpeed = .25;
+        this._animSprite.gotoAndStop(0);
+        
 
-        tlprtStatic.interactive = true;
-        // TODO: hitarea
-        tlprtStatic.onmouseup = (event) => {
-            tlprtStatic.gotoAndPlay(1);
-        }
+        this._animSprite.interactive = true;
 
-        this._view.addChild(tlprtStatic);
+        this._view.x = 800 / 2 - w / 2;
+        this._view.y = 600 / 2 - h / 2;
+        this._view.addChild(this._animSprite);
+        
+
+        // hit rect
+        this.hitRect = new PIXI.Graphics();
+        this.hitRect.beginFill(0xf29766, 1);
+        this.hitRect.drawRect(40, 10, 50, 28);
+        this._view.hitArea = new Rectangle(40, 10, 50, 28);
+        this.hitRect.endFill();
+
+        // this.hitArea = new Container();
+        // this.hitArea.width = this.hitRect.width;
+        // this.hitArea.height = this.hitRect.height;
+        // this.hitArea.x = this.hitRect.x;
+        // this.hitArea.y = this.hitRect.y;
+        // this.hitArea.addChild(this.hitRect);
+
+        // this._view.addChild(this.hitArea);
+        this._view.addChild(this.hitRect);
+        this._mc.addChild(this._view);
+
+        ScreenManager.app.ticker.add(() => {
+            if(Debug.isDebug) {
+                this.hitRect.alpha = .3;
+            } else {
+                this.hitRect.alpha = 0;
+            }
+        });
+    }
+
+    playTeleport() {
+        this._animSprite.gotoAndPlay(1);
     }
 
     get view(): Container { return this._view; }
