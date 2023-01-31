@@ -19,7 +19,10 @@ export class EventManager {
                     User.pointsAdd();
                 break;
                 case AppEvent.NPC_TELEPORT:
-                    if (props.tlprt instanceof Teleport) props.tlprt.playTeleport();
+                    if (props.tlprt instanceof Teleport) {
+                        props.tlprt.playTeleport();
+                    }
+                    EventManager.eventStream$.next({e: AppEvent.NPC_ADD_EXTRA, props: this});
                 break;
             }
         });

@@ -10,6 +10,7 @@ import { NPCDirection } from "./npc-direction";
 import { Minotaur } from "./minotaur";
 import { Utils } from "../utils/utils";
 import { INPC } from "./inpc";
+import { MinotaurExtra } from "./minotaur-extra";
 
 
 
@@ -21,7 +22,12 @@ export class NPCGenerator {
     private _npcSpeedPower: number = 0.005;
     npss: INPC[] = [];
     
-    constructor(mainContainer: Container, direction: NPCDirection, time: number = 2000, x: number, y: number) {
+    constructor(
+        mainContainer: Container, 
+        direction: NPCDirection, 
+        time: number = 2000, 
+        x: number, y: number
+    ) {
 
         this._view = new Container();
         this._mc = mainContainer;
@@ -80,8 +86,21 @@ export class NPCGenerator {
                             props.npc.destroy();
                         }
                     break;
+                    
                 }
             });
+    }
+
+    addExtraNPC(): void {
+        this.npss.push(
+            new MinotaurExtra(
+                this._mc,
+                +this._view.x,
+                +this._view.y,
+                this._direction, 
+                Utils.generateRandomId(), 
+                this._npcSpeedPower)
+        );
     }
 
     play() {

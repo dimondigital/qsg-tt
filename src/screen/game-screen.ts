@@ -52,6 +52,11 @@ export class GameScreen extends AScreen {
                     case AppEvent.UI_POINTS_SHOW:
                         userPointsCounter.text = `POINTS: ${User.points}`
                     break;
+                    case AppEvent.NPC_ADD_EXTRA:
+                        const randomNPCGeneratorIdx: number = Math.floor(Math.random() * this._npcGenerators.length);
+                        console.log(`randomNPCGeneratorIdx: ${randomNPCGeneratorIdx}`);
+                        this._npcGenerators[randomNPCGeneratorIdx].addExtraNPC();
+                    break;
                 }
         });
 
