@@ -1,8 +1,6 @@
-import { AnimatedSprite, ColorMatrixFilter, Container, IHitArea, Rectangle, Sprite, Text, Texture, Ticker } from "pixi.js";
+import { Container, Sprite, Text, Texture, Ticker } from "pixi.js";
 import { AScreen } from "./a-screen";
-import * as PIXI from 'pixi.js';
 import UGConfig from "../assets/unit-generator.config.json";
-import gsap from "gsap";
 import { Teleport } from "../actors/teleport";
 import { NPCGenerator } from "../actors/npc-generator";
 import { EventManager } from "../event/event-manager";
@@ -24,9 +22,7 @@ export class GameScreen extends AScreen {
 
     public override init(): void {
 
-        /* init scene actors */
-
-        // background
+        // bg
         const bgSprite = new Sprite(Texture.from('assets/map.png'));
         this._mc.addChild(bgSprite);
 
@@ -41,6 +37,7 @@ export class GameScreen extends AScreen {
 
         /* UI */
         // points counter
+        User.clearProgress();
         const userPointsCounter = new Text('POINTS: 0', {
             fontFamily: 'Trebuchet MS',
             fontSize: 15,
@@ -75,8 +72,6 @@ export class GameScreen extends AScreen {
 
         if (!this.destroyed) {
             this._gameTicker = GameController.app.ticker.add(() => {
-                
-
                 // hitTest for teleport & each npc
                 if (this._npcGenerators) {
                     for(let npcG of this._npcGenerators) {
@@ -104,8 +99,6 @@ export class GameScreen extends AScreen {
             }
             npcG.destroy();
         }
-        // this._npcGenerators = undefined;
-        // this._gameTicker.destroy();
         this.destroyed = false;
         super.destroy();
     }

@@ -3,6 +3,7 @@ import { INPC } from "./inpc";
 import { Minotaur } from "./minotaur";
 import { NPCDirection } from "./npc-direction";
 
+// MinotaurExtra is x2 faster and brighter than normal one and initiate game over event when toches the teleport 
 export class MinotaurExtra extends Minotaur implements INPC {
 
     constructor(

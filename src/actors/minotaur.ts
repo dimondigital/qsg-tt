@@ -28,7 +28,7 @@ export class Minotaur extends NPC implements INPC {
     public override init() {
         this.frameWidth = 140;
         this.frameHeight = 140;
-        this.sheet = Texture.from('assets/adt_minotaur_shaman+fx.png');
+        this.sheet = Texture.from('assets/minotaur_shaman+fx.png');
 
         let scaleX = 0.5;
         let scaleY = 0.5; 
@@ -68,7 +68,6 @@ export class Minotaur extends NPC implements INPC {
         
         const src = fromEvent(this.animS, 'click');
         this._clickSub = src.subscribe(e => {
-            // console.log('clk')
             this._health -= User.power;
             if (this._health > 0) {
                 EventManager.eventStream$.next({e: AppEvent.NPC_HIT, props: this});

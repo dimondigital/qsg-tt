@@ -1,45 +1,33 @@
-import EventEmitter from "eventemitter3";
-import { Container, EventBoundary, FederatedEvent, FederatedPointerEvent, Text, TextStyle } from "pixi.js";
-import { fromEvent } from "rxjs";
-import { AppEvent } from "../event/app-event";
-import { EventManager } from "../event/event-manager";
+import { Container, Rectangle, Sprite, Texture } from "pixi.js";
+import { StartGameButton } from "../ui/start-game-button";
 import { AScreen } from "./a-screen";
 
 export class MenuScreen extends AScreen {
+
+    btn: StartGameButton;
 
     constructor(mainContainer: Container) {
         super(mainContainer);
     }
 
     public override init(): void {
-        // header
-        const header = new Text('Menu Screen', {
-            fontFamily: 'Georgia',
-            fontSize: 15,
-            fill: 0xffffff,
-            align: 'left'
-        })
-        this.view.addChild(header);
+
+        // bg
+        const bg = new Texture(Texture.from('../assets/menu-screen.png').baseTexture, new Rectangle(0, 0, 800, 600));
+        const bgSprite = new Sprite(bg);
+        this._view.addChild(bgSprite);
 
         // start game button
-        let button = new Text('start game', {
-            fill: 0xffffff,
-            fontFamily: 'Georgia',
-            fontSize: 15,
-            align: 'center',
-        })
-        button.y = 50;
-        this.view.addChild(button);
-        button.interactive = true;
-
-        const src = fromEvent(button, 'click');
-        this._clickSub = src.subscribe((e) => {
-            EventManager.eventStream$.next({e: AppEvent.GAME_INIT, props: this});
-        });
+        this.btn = new StartGameButton();
+        const btnSprite = this.btn.animS;
+        btnSprite.x = 460;
+        btnSprite.y = 350;
+        this._view.addChild(btnSprite);
+        this._mc.addChild(this._view);
     }
 
     public override destroy(): void {
-        this._clickSub.unsubscribe();
+        this.btn.destroy();
         super.destroy();
     }
 }

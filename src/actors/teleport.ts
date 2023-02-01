@@ -18,8 +18,8 @@ export class Teleport {
     }
 
     init() {
-        const sheet = PIXI.Texture.from('assets/teleport_1282.png'), 
-        w = 128, h = 64, numFrames = 4;
+        const sheet = PIXI.Texture.from('assets/teleport.png'), 
+        w = 128, h = 64;
 
         let teleportSheet: any = {};
         teleportSheet['static'] = [
@@ -50,15 +50,7 @@ export class Teleport {
         this.hitRect.drawRect(40, 10, 50, 28);
         this._view.hitArea = new Rectangle(40, 10, 50, 28);
         this.hitRect.endFill();
-
-        // this.hitArea = new Container();
-        // this.hitArea.width = this.hitRect.width;
-        // this.hitArea.height = this.hitRect.height;
-        // this.hitArea.x = this.hitRect.x;
-        // this.hitArea.y = this.hitRect.y;
-        // this.hitArea.addChild(this.hitRect);
-
-        // this._view.addChild(this.hitArea);
+        
         this._view.addChild(this.hitRect);
         this._mc.addChild(this._view);
 

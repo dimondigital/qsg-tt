@@ -6,7 +6,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    // entry: {bundle: path.resolve(__dirname, 'src/index.js'),},
     entry: './src/index.ts',
     module: {
         rules: [
@@ -71,7 +70,7 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-          title: 'Pixi / Typescript seed',
+          title: 'Click Master',
         }),
         new CopyPlugin({
           patterns: [{

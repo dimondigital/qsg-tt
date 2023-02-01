@@ -7,10 +7,8 @@ body {
     height: 100vh;
     background-color: #251e6a;
     cursor: url('assets/cursor-normal.cur'), pointer; 
-    /* cursor: none;  */
 }
 
 canvas {
     display: flex;
-    
 }

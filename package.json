@@ -1,6 +1,6 @@
 {
   "name": "qsg-tt",
-  "version": "0.8.4",
+  "version": "1.0.0",
   "description": "game",
   "main": "src/index.ts",
   "scripts": {
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
+    "@pixi/events": "^7.1.2",
     "babel-loader": "^9.1.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
@@ -35,9 +36,6 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "@pixi/events": "^7.1.1",
-    "@pixi/spritesheet": "^7.1.0",
-    "eventemitter3": "^5.0.0",
     "gsap": "^3.11.4",
     "pixi-filters": "^5.1.1",
     "pixi.js": "^7.1.0",

@@ -1,10 +1,7 @@
-import EventEmitter from 'eventemitter3';
-import { PixelateFilter } from 'pixi-filters';
 import * as PIXI from 'pixi.js';
-import { AnimatedSprite, Container, EventSystem, Renderer, Texture } from 'pixi.js';
+import { Container } from 'pixi.js';
 import { AppEvent } from '../event/app-event';
 import { EventManager } from '../event/event-manager';
-import { User } from '../user/user';
 import { AScreen } from './a-screen';
 import { GameScreen } from './game-screen';
 import { GameoverScreen } from './gameover-screen';
@@ -64,7 +61,6 @@ export class GameController {
                         this.initGameScreen();
                     break;
                     case AppEvent.GAME_OVER:
-                        User.clearProgress();
                         this.destroy();
                         this.initGameoverScreen();
                     break;
@@ -74,10 +70,6 @@ export class GameController {
     
     destroy(): void {
         this.currentScreen.destroy();
-        // for(let child of this.mainContainer.children) {
-        //     child.destroy();
-        // }
-        // const removed = this.mainContainer.removeChildren();
     }
 
 }

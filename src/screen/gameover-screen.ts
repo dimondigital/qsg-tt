@@ -1,12 +1,12 @@
-import EventEmitter from "eventemitter3";
-import { Container, Graphics, Rectangle, Text } from "pixi.js";
-import { fromEvent } from "rxjs";
-import { AppEvent } from "../event/app-event";
-import { EventManager } from "../event/event-manager";
-import { GameConfig } from "../game-config";
+import { Container, Rectangle, Sprite, Text, Texture } from "pixi.js";
+import { StartGameButton } from "../ui/start-game-button";
+import { User } from "../user/user";
 import { AScreen } from "./a-screen";
 
+
 export class GameoverScreen extends AScreen {
+
+    btn: StartGameButton;
     
     constructor(mainContainer: Container) {
         super(mainContainer);
@@ -15,43 +15,46 @@ export class GameoverScreen extends AScreen {
     public override init(): void {
         
         // bg
-        const bg = new Graphics();
-        bg.beginFill(0x000000, 1);
-        bg.drawRect(0, 0, GameConfig.GAMESCREEN_WIDTH, GameConfig.GAMESCREEN_HEIGHT);
-        bg.endFill();
-        // this._mc.removeChildren();
-        // this._mc.addChild(this.view);
-        this._mc.addChild(bg);
+        const bg = new Texture(Texture.from('../assets/gameover-screen.png').baseTexture, new Rectangle(0, 0, 800, 600));
+        const bgSprite = new Sprite(bg);
+        this._view.addChild(bgSprite);
 
-        // header
-        const header = new Text('Gameover Screen', {
-            fontFamily: 'Georgia',
-            fontSize: 15,
+        // count current score
+        const yourScore = new Text(User.points, {
+            fontFamily: 'Trebuchet MS',
+            fontSize: 30,
+            fontWeight: 'bold',
             fill: 0xffffff,
-            align: 'left'
-        })
-        this._mc.addChild(header);
-
-        // start game button
-        let button = new Text('start new game', {
-            fill: 0xffffff,
-            fontFamily: 'Georgia',
-            fontSize: 15,
-            align: 'center',
-            
-        })
-        button.y = 50;
-        this._mc.addChild(button);
-        button.interactive = true;
-
-        const src = fromEvent(button, 'click');
-        this._clickSub = src.subscribe((e) => {
-            EventManager.eventStream$.next({e: AppEvent.GAME_INIT, props: this});
+            align: 'right'
         });
+        yourScore.x = 200;
+        yourScore.y = 72;
+        this.view.addChild(yourScore);
+
+        // count highest score
+        const highestScore = new Text(User.highest, {
+            fontFamily: 'Trebuchet MS',
+            fontSize: 30,
+            fontWeight: 'bold',
+            fill: 0xffffff,
+            align: 'right'
+        });
+        highestScore.x = 240;
+        highestScore.y = 200;
+        this.view.addChild(highestScore);
+
+        // start new game button
+        this.btn = new StartGameButton();
+        const btnSprite = this.btn.animS;
+        btnSprite.x = 460;
+        btnSprite.y = 350;
+        this.view.addChild(btnSprite);
+
+        this._mc.addChild(this.view);
     }
 
     public override destroy(): void {
-        this._clickSub.unsubscribe();
+        this.btn.destroy();
         super.destroy();
     }
 

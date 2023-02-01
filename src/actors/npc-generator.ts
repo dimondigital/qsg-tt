@@ -1,7 +1,5 @@
-import { Container, DisplayObject, Rectangle } from "pixi.js";
-import { GameConfig } from "../game-config";
+import { Container, Rectangle } from "pixi.js";
 import { GameController } from "../screen/screen-maganer";
-import { NPC } from "./npc";
 import * as PIXI from 'pixi.js';
 import { EventManager } from "../event/event-manager";
 import { AppEvent } from "../event/app-event";
@@ -13,12 +11,11 @@ import { INPC } from "./inpc";
 import { MinotaurExtra } from "./minotaur-extra";
 
 
-
 export class NPCGenerator {
     private _view: Container;
     private _mc: Container;
     private _direction: NPCDirection;
-    private _graphics: PIXI.Graphics;
+    private _debugRect: PIXI.Graphics;
     private _npcSpeedPower: number = 0.005;
     private _increaseSpeedInterval: NodeJS.Timer;
     private _generateNPCInterval: NodeJS.Timer;
@@ -33,17 +30,16 @@ export class NPCGenerator {
 
         this._view = new Container();
         this._mc = mainContainer;
-        // console.log(` dir: ${direction}`);
         this._direction = direction;
         this._view.x = x;
         this._view.y = y;
 
-        this._graphics = new PIXI.Graphics();
-        this._graphics.beginFill(0xff00ff, .3);
+        this._debugRect = new PIXI.Graphics();
+        this._debugRect.beginFill(0xff00ff, .3);
         const rect: PIXI.Rectangle = new Rectangle(0, 0, 15, 15);
-        this._graphics.drawRect(0, 0, rect.width, rect.height);
-        this._graphics.endFill();
-        this._view.addChild(this._graphics);
+        this._debugRect.drawRect(0, 0, rect.width, rect.height);
+        this._debugRect.endFill();
+        this._view.addChild(this._debugRect);
         this._mc.addChild(this._view);
 
         this.init(time);
@@ -116,9 +112,9 @@ export class NPCGenerator {
             });
 
             if(Debugger.isDebug) {
-                this._graphics.alpha = 1;
+                this._debugRect.alpha = 1;
             } else {
-                this._graphics.alpha = 0;
+                this._debugRect.alpha = 0;
             }
             
         });
